@@ -269,7 +269,7 @@ function detay(id){
       <div><div style="font-size:14px;font-weight:500;">${x.not||'Ödeme'}</div><div style="font-size:12px;color:var(--text3);margin-top:2px;">${fmt(x.tarih)}</div></div>
       <div style="display:flex;align-items:center;gap:10px;">
         <div class="odeme-amount ${x.durum}">${x.miktar}₺</div>
-        ${x.durum==='bekliyor'?`<button class="btn btn-green btn-sm" onclick="odemeAlindi('${x.id}');detay('${id}')">✓ Alındı</button>`:'<span class="tag tag-green">✓ Alındı</span>'}
+        ${x.durum==='bekliyor'?`<button class="btn btn-green btn-sm" onclick="odemeAlindi('${x.id}');detay('${id}')">✓ Alındı</button>`:`<button class="btn btn-ghost btn-sm" onclick="odemeBekliyor('${x.id}');detay('${id}')">↩ Geri Al</button>`}
       </div>
     </div>`;
   });
@@ -498,6 +498,7 @@ function silOgr(id){
 }
 function silOdev(id){DB.set('odev',DB.get('odev').filter(x=>x.id!==id));}
 function silDers(id){DB.set('ders',DB.get('ders').filter(x=>x.id!==id));}
+function odemeBekliyor(id){const l=DB.get('odeme');const i=l.findIndex(x=>x.id===id);if(i>-1){l[i].durum='bekliyor';DB.set('odeme',l);}}
 function odemeAlindi(id){const l=DB.get('odeme');const i=l.findIndex(x=>x.id===id);if(i>-1){l[i].durum='alindi';DB.set('odeme',l);}}
 
 showPage('dashboard');
