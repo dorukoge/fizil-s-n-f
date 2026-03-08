@@ -560,10 +560,8 @@ const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyCBNqJ1_g1lRx0SOcnM3
 async function syncToSheet() {
   const {o,d,v,p} = get();
   try {
-    const resp = await fetch(SHEET_URL, {
-      method:'POST',
-      body: JSON.stringify({ogr:o, ders:d, odev:v, odeme:p})
-    });
+    const data = encodeURIComponent(JSON.stringify({ogr:o,ders:d,odev:v,odeme:p}));
+    const resp = await fetch(SHEET_URL + '?action=save&data=' + data);
     const result = await resp.json();
     if(result.ok) showSyncMsg('✅ Kaydedildi!', 'green');
     else showSyncMsg('❌ Hata!', 'red');
@@ -575,7 +573,7 @@ async function syncToSheet() {
 async function syncFromSheet() {
   showSyncMsg('⏳ Yükleniyor...', 'yellow');
   try {
-    const resp = await fetch(SHEET_URL + '?t=' + Date.now());
+    const resp = await fetch(SHEET_URL + '?action=load&t=' + Date.now());
     const data = await resp.json();
     if(data.ogr) DB.set('ogr', data.ogr);
     if(data.ders) DB.set('ders', data.ders);
